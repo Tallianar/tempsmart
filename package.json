@@ -1,0 +1,9 @@
+{
+  "name": "tempsmart",
+  "version": "1.0.0",
+  "description": "A small utility to monitor the correlation between weather and CPU temperature",
+  "main": "index.js",
+  "author": "Simone Masiero",
+  "license": "UNLICENSED",
+  "private": true
+}
