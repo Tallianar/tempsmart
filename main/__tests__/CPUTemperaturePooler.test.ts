@@ -10,7 +10,7 @@ describe("CPUTemperaturePooler", () => {
 		mockSI.cpuTemperature.mockResolvedValue({ main: 100, cores: [10], max: 1 });
 
 		const pooler = new CPUTemperaturePooler();
-		const result = await pooler.getTemperature();
+		const result = await pooler.requestTemperature();
 
 		expect(mockSI.cpuTemperature.mock.calls.length).toEqual(1);
 		expect(result).toEqual(100);

@@ -1,9 +1,19 @@
-import si from "systeminformation";
 import axios from "axios";
 import queryString from "querystring";
+import { TemperaturePooler } from "./TemperaturePooler";
 
-export class WeatherTemperaturePooler {
-	async getTemperature() {
+/**
+ * Pooler to fetch the current temperature from the OpenWeatherMap API
+ */
+export class WeatherTemperaturePooler extends TemperaturePooler {
+	/**
+	 * The OWM API free tier offers 1 request every 60 seconds for the current weather endpoint
+	 */
+	constructor() {
+		super(60 * 1000);
+	}
+
+	protected async fetchTemperature() {
 		const baseUrl = "https://api.openweathermap.org/data/2.5/weather";
 		const params = {
 			q: "Edinburgh",

@@ -7,7 +7,7 @@ const weatherPooler = new WeatherTemperaturePooler();
 
 ipcMain.on("temperature", async (event, params) => {
 	event.reply("temperature", {
-		cpu: await cpuPooler.getTemperature(),
-		weather: await weatherPooler.getTemperature(),
+		cpu: await cpuPooler.requestTemperature(),
+		weather: await weatherPooler.requestTemperature(),
 	});
 });

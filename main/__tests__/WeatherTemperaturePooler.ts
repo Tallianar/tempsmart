@@ -13,7 +13,7 @@ describe("Weather temperature pooler", () => {
 	test("Should fetch temperature", async () => {
 		mockAxios.get.mockResolvedValue({ data: { name: "city", main: { temp: 100 } } });
 		const pooler = new WeatherTemperaturePooler();
-		const result = await pooler.getTemperature();
+		const result = await pooler.requestTemperature();
 
 		expect(result).toEqual(100);
 		expect(mockAxios.get.mock.calls.length).toEqual(1);
