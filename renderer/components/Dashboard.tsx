@@ -9,10 +9,12 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
 	return (
 		<main title={"Dashboard"}>
 			<div>
-				CPU: <span aria-label={"CPU Temperature"}>{cpu}</span>
+				CPU: <span aria-label={"CPU temperature"}>{cpu.value}</span>
+				{cpu.error && <div aria-label={"CPU error"}>{cpu.error}</div>}
 			</div>
 			<div>
-				Weather: <span aria-label={"Weather Temperature"}>{weather}</span>
+				Weather: <span aria-label={"Weather temperature"}>{weather.value}</span>
+				{weather.error && <div aria-label={"Weather error"}>{weather.error}</div>}
 			</div>
 		</main>
 	);

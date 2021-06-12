@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { useIpcTemperatureChannel } from "./ipc/useIpcTemperatureChannel";
+import { useEffect, useState } from "react";
+import { TemperatureResponse, useIpcTemperatureChannel } from "./ipc/useIpcTemperatureChannel";
 
 /**
  * A hook to get the temperature from the backend.
@@ -7,8 +7,8 @@ import { useIpcTemperatureChannel } from "./ipc/useIpcTemperatureChannel";
  * @param replyChannel an optional channel if you want to subscribe to the events of another channel.
  */
 export function useTemperature(refresh?: number, replyChannel?: string) {
-	const [weather, setWeather] = useState<number>(0);
-	const [cpu, setCPU] = useState<number>(0);
+	const [weather, setWeather] = useState<TemperatureResponse>({ value: null });
+	const [cpu, setCPU] = useState<TemperatureResponse>({ value: null });
 
 	const channel = useIpcTemperatureChannel((params) => {
 		setWeather(params.weather);

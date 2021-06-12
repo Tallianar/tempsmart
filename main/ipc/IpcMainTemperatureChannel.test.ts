@@ -26,14 +26,14 @@ test("Should send values", async () => {
 	await channel.handleEvent({ reply: replyMock } as any, { replyChannel: "reply" });
 	expect(mockCPU.mock.calls.length).toEqual(1);
 	expect(replyMock.mock.calls[0][0]).toEqual("reply");
-	expect(replyMock.mock.calls[0][1]).toEqual({ cpu: 100, weather: 200 });
+	expect(replyMock.mock.calls[0][1]).toEqual({ cpu: { value: 100 }, weather: { value: 200 } });
 });
 
 test("Should get the temperature channel name", async () => {
 	expect(channel.getChannel()).toEqual("temperature");
 });
 
-test("Should send zero when CPU throws an error", async () => {
+test("Should send an error when CPU throws an error", async () => {
 	mockCPU.mockRejectedValue(new Error("error"));
 	mockOWM.mockResolvedValue(200);
 
@@ -42,8 +42,8 @@ test("Should send zero when CPU throws an error", async () => {
 	expect(mockCPU.mock.calls.length).toEqual(1);
 	expect(replyMock.mock.calls[0][0]).toEqual("reply");
 	expect(replyMock.mock.calls[0][1]).toEqual({
-		cpu: 0,
-		weather: 200,
+		cpu: { value: null, error: "error" },
+		weather: { value: 200 },
 	});
 });
 
@@ -56,7 +56,7 @@ test("Should send zero when OWM throws an error", async () => {
 	expect(mockCPU.mock.calls.length).toEqual(1);
 	expect(replyMock.mock.calls[0][0]).toEqual("reply");
 	expect(replyMock.mock.calls[0][1]).toEqual({
-		cpu: 100,
-		weather: 0,
+		cpu: { value: 100 },
+		weather: { value: null, error: "error" },
 	});
 });

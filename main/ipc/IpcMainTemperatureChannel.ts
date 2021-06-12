@@ -24,16 +24,16 @@ export class IpcMainTemperatureChannel {
 
 		let cpu;
 		try {
-			cpu = await this.cpuPooler.requestTemperature();
+			cpu = { value: await this.cpuPooler.requestTemperature() };
 		} catch (e) {
-			cpu = 0;
+			cpu = { value: null, error: e.message };
 		}
 
 		let weather;
 		try {
-			weather = await this.weatherPooler.requestTemperature();
+			weather = { value: await this.weatherPooler.requestTemperature() };
 		} catch (e) {
-			weather = 0;
+			weather = { value: null, error: e.message };
 		}
 
 		event.reply(params.replyChannel, { cpu, weather });

@@ -1,8 +1,13 @@
 import { useIpcChannel } from "./useIpcChannel";
 
+export interface TemperatureResponse {
+	value: number | null;
+	error?: string;
+}
+
 interface IpcRendererTemperatureChannelResponse {
-	cpu: number;
-	weather: number;
+	cpu: TemperatureResponse;
+	weather: TemperatureResponse;
 }
 
 /**

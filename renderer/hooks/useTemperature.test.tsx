@@ -43,9 +43,9 @@ test("Should request multiple times with refresh", (done) => {
 
 test("Should update the state on new data", () => {
 	const { unmount } = render(<HookComponent />);
-	callback({ weather: 100, cpu: 200 });
+	callback({ weather: { value: 100 }, cpu: { value: 200 } });
 	unmount();
 	expect(mockSetState.mock.calls.length).toEqual(2);
-	expect(mockSetState.mock.calls[0][0]).toEqual(100);
-	expect(mockSetState.mock.calls[1][0]).toEqual(200);
+	expect(mockSetState.mock.calls[0][0]).toEqual({ value: 100 });
+	expect(mockSetState.mock.calls[1][0]).toEqual({ value: 200 });
 });
