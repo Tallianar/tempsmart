@@ -12,7 +12,6 @@ export class CPUTemperaturePooler extends TemperaturePooler {
 
 	protected async fetchTemperature() {
 		const data = await si.cpuTemperature();
-
 		return data.main;
 	}
 }

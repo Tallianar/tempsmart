@@ -14,8 +14,9 @@ export class IpcMainTemperatureChannel {
 		return "temperature";
 	}
 
-	async handleEvent(event: IpcMainEvent) {
-		event.reply("temperature", {
+	async handleEvent(event: IpcMainEvent, params: { replyChannel: string }) {
+		// console.log(`[ipc][${this.getChannel()}] -> ${params.replyChannel}`);
+		event.reply(params.replyChannel, {
 			cpu: await this.cpuPooler.requestTemperature(),
 			weather: await this.weatherPooler.requestTemperature(),
 		});

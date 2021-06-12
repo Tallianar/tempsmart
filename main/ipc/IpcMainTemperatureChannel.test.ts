@@ -20,9 +20,9 @@ test("Should send values", async () => {
 	mockOWM.mockResolvedValue(200);
 
 	const replyMock = jest.fn();
-	await channel.handleEvent({ reply: replyMock } as any);
+	await channel.handleEvent({ reply: replyMock } as any, { replyChannel: "reply-channel" });
 	expect(mockCPU.mock.calls.length).toEqual(1);
-	expect(replyMock.mock.calls[0][0]).toEqual("temperature");
+	expect(replyMock.mock.calls[0][0]).toEqual("reply-channel");
 	expect(replyMock.mock.calls[0][1]).toEqual({ cpu: 100, weather: 200 });
 });
 
