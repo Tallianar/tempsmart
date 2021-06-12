@@ -6,13 +6,13 @@ import { TemperaturePooler } from "./TemperaturePooler";
  * Pooler to fetch the current temperature from the OpenWeatherMap API
  */
 export class WeatherTemperaturePooler extends TemperaturePooler {
-	public appId: string = "";
-	public city: string = "";
+	public appId: string;
+	public city: string;
 
 	/**
 	 * The OWM API free tier offers 1 request every 60 seconds for the current weather endpoint
 	 */
-	constructor(appId: string, city: string) {
+	constructor(appId: string = "", city: string = "") {
 		super(60 * 1000);
 		this.appId = appId;
 		this.city = city;

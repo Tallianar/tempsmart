@@ -9,7 +9,9 @@ afterEach(() => {
 	mockedIpc.on.mockClear();
 });
 
-test("Should register the temperature channel", () => {
+test("Should register the channels", () => {
 	registerIpcChannels();
-	expect(mockedIpc.on.mock.calls.length).toEqual(1);
+	expect(mockedIpc.on.mock.calls.length).toEqual(2);
+	expect(mockedIpc.on.mock.calls[0][0]).toEqual("setup");
+	expect(mockedIpc.on.mock.calls[1][0]).toEqual("temperature");
 });

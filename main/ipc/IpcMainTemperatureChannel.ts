@@ -7,11 +7,13 @@ import { WeatherTemperaturePooler } from "../pooler/WeatherTemperaturePooler";
  * The renderer should request new value and the main will respond with the values from the poolers
  */
 export class IpcMainTemperatureChannel {
-	private cpuPooler = new CPUTemperaturePooler();
-	private weatherPooler = new WeatherTemperaturePooler(
-		"2d567e25289ca017a464bcba6c011cf1",
-		"Edinburgh"
-	);
+	private cpuPooler;
+	private weatherPooler;
+
+	constructor(cpuPooler: CPUTemperaturePooler, weatherPooler: WeatherTemperaturePooler) {
+		this.cpuPooler = cpuPooler;
+		this.weatherPooler = weatherPooler;
+	}
 
 	getChannel() {
 		return "temperature";

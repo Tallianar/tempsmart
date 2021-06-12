@@ -7,7 +7,10 @@ const mockOWM = jest.spyOn(WeatherTemperaturePooler.prototype, "requestTemperatu
 let channel: IpcMainTemperatureChannel;
 
 beforeEach(() => {
-	channel = new IpcMainTemperatureChannel();
+	channel = new IpcMainTemperatureChannel(
+		new CPUTemperaturePooler(),
+		new WeatherTemperaturePooler()
+	);
 });
 
 afterEach(() => {
