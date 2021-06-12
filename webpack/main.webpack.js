@@ -1,4 +1,5 @@
 const path = require("path");
+const { IgnorePlugin } = require("webpack");
 
 const rootPath = path.resolve(__dirname, "..");
 const distPath = path.resolve(rootPath, "dist");
@@ -33,4 +34,5 @@ module.exports = {
 		path: distPath,
 		filename: "[name].js",
 	},
+	plugins: [new IgnorePlugin({ resourceRegExp: /osx-temperature-sensor$/ })],
 };

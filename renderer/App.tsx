@@ -4,15 +4,20 @@ import { ipcRenderer, IpcRendererEvent } from "electron";
 interface Props {}
 
 const App = ({}: Props) => {
-	const [temp, setTemp] = useState<number>(0);
+	const [weather, setWeather] = useState<number>(0);
+	const [cpu, setCPU] = useState<number>(0);
 
 	useEffect(() => {
 		const timer = setInterval(() => {
 			ipcRenderer.send("temperature");
 		}, 1000);
 
-		const callback = (event: IpcRendererEvent, { cpu }: { cpu: number }) => {
-			setTemp(cpu);
+		const callback = (
+			event: IpcRendererEvent,
+			{ cpu, weather }: { cpu: number; weather: number }
+		) => {
+			setCPU(cpu);
+			setWeather(weather);
 		};
 
 		ipcRenderer.on("temperature", callback);
@@ -22,7 +27,12 @@ const App = ({}: Props) => {
 		};
 	}, []);
 
-	return <div>CPU: {temp}</div>;
+	return (
+		<div>
+			<div>CPU: {cpu}</div>
+			<div>Weather: {weather}</div>
+		</div>
+	);
 };
 
 export { App };

@@ -25,6 +25,7 @@
 		"osx-temperature-sensor": "^1.0.7"
 	},
 	"dependencies": {
+		"axios": "^0.21.1",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
 		"sass": "^1.32.12",
@@ -58,6 +59,15 @@
 		"appId": "net.simone_m.tempsmart",
 		"mac": {
 			"category": "public.app-category.productivity"
+		},
+		"win": {
+			"target": "nsis",
+			"requestedExecutionLevel": "requireAdministrator"
+		},
+		"nsis": {
+			"guid": "a9b2493f-479e-4d01-9c2d-f0d37ca21aa0",
+			"oneClick": true,
+			"perMachine": true
 		},
 		"directories": {
 			"output": "packages"
