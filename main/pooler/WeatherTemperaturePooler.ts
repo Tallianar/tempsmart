@@ -6,25 +6,48 @@ import { TemperaturePooler } from "./TemperaturePooler";
  * Pooler to fetch the current temperature from the OpenWeatherMap API
  */
 export class WeatherTemperaturePooler extends TemperaturePooler {
+	public appId: string = "";
+	public city: string = "";
+
 	/**
 	 * The OWM API free tier offers 1 request every 60 seconds for the current weather endpoint
 	 */
-	constructor() {
+	constructor(appId: string, city: string) {
 		super(60 * 1000);
+		this.appId = appId;
+		this.city = city;
 	}
 
-	protected async fetchTemperature() {
-		const baseUrl = "https://api.openweathermap.org/data/2.5/weather";
+	getUrl() {
+		const base = `https://api.openweathermap.org/data/2.5/weather`;
+
+		if (!this.appId) {
+			throw new Error("OWM AppID not set");
+		}
+
+		if (!this.city) {
+			throw new Error("OWM City not set");
+		}
+
 		const params = {
-			q: "Edinburgh",
-			appid: "2d567e25289ca017a464bcba6c011cf1",
+			q: this.city,
+			appid: this.appId,
 			units: "metric",
 			lang: "en",
 		};
 
 		const query = queryString.stringify(params);
-		console.log(new Date(), "fetch owm");
-		const { data } = await axios.get(`${baseUrl}?${query}`);
-		return data.main.temp;
+
+		return `${base}?${query}`;
+	}
+
+	protected async fetchTemperature() {
+		const url = this.getUrl();
+		try {
+			const { data } = await axios.get(url);
+			return data.main.temp;
+		} catch (e) {
+			throw new Error("Could not fetch OpenWeatherMap Temperature");
+		}
 	}
 }

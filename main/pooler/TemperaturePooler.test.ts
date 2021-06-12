@@ -3,6 +3,7 @@ import { TemperaturePooler } from "./TemperaturePooler";
 const fetchMock = jest.fn().mockImplementation(() => 100);
 
 class TestPooler extends TemperaturePooler {
+
 	protected async fetchTemperature(): Promise<number> {
 		return fetchMock();
 	}

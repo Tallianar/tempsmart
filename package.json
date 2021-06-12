@@ -19,7 +19,7 @@
 		"build:renderer": "webpack --config webpack/renderer.webpack.js --mode production",
 		"package": "npm-run-all build package:dist",
 		"package:dist": "electron-builder --dir",
-		"test": "jest --color"
+		"test": "jest --color --coverage"
 	},
 	"optionalDependencies": {
 		"osx-temperature-sensor": "^1.0.7"

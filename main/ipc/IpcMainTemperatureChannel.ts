@@ -8,7 +8,10 @@ import { WeatherTemperaturePooler } from "../pooler/WeatherTemperaturePooler";
  */
 export class IpcMainTemperatureChannel {
 	private cpuPooler = new CPUTemperaturePooler();
-	private weatherPooler = new WeatherTemperaturePooler();
+	private weatherPooler = new WeatherTemperaturePooler(
+		"2d567e25289ca017a464bcba6c011cf1",
+		"Edinburgh"
+	);
 
 	getChannel() {
 		return "temperature";
@@ -16,9 +19,21 @@ export class IpcMainTemperatureChannel {
 
 	async handleEvent(event: IpcMainEvent, params: { replyChannel: string }) {
 		// console.log(`[ipc][${this.getChannel()}] -> ${params.replyChannel}`);
-		event.reply(params.replyChannel, {
-			cpu: await this.cpuPooler.requestTemperature(),
-			weather: await this.weatherPooler.requestTemperature(),
-		});
+
+		let cpu;
+		try {
+			cpu = await this.cpuPooler.requestTemperature();
+		} catch (e) {
+			cpu = 0;
+		}
+
+		let weather;
+		try {
+			weather = await this.weatherPooler.requestTemperature();
+		} catch (e) {
+			weather = 0;
+		}
+
+		event.reply(params.replyChannel, { cpu, weather });
 	}
 }

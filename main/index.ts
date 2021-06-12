@@ -1,8 +1,10 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
-import "./ipc";
+import { registerIpcChannels } from "./ipc/registerIpcChannels";
 
 let mainWindow: Electron.BrowserWindow | null;
+
+registerIpcChannels();
 
 function createWindow() {
 	mainWindow = new BrowserWindow({

@@ -8,9 +8,10 @@ jest.mock("electron", () => ({ ipcRenderer: { on: jest.fn(), off: jest.fn(), sen
 const mockedIpc = mocked(ipcRenderer);
 let channel: { sendEvent: (params: any) => void };
 let mockOnEvent = jest.fn();
+jest.spyOn(Math, "random").mockImplementation(() => 0.123456);
 
-function HookComponent() {
-	channel = useIpcChannel("test", "reply", mockOnEvent);
+function HookComponent({ replyChannel }: { replyChannel?: string }) {
+	channel = useIpcChannel("test", mockOnEvent, replyChannel);
 	return null;
 }
 
@@ -27,6 +28,20 @@ test("Should register listener on mount", () => {
 	expect(mockedIpc.on.mock.calls.length).toEqual(1);
 });
 
+test("Should generate a replyChannel id", () => {
+	const { unmount } = render(<HookComponent />);
+	unmount();
+	expect(mockedIpc.on.mock.calls.length).toEqual(1);
+	expect(mockedIpc.on.mock.calls[0][0]).toEqual("test-123456");
+});
+
+test("Should use the assigned replyChannel id", () => {
+	const { unmount } = render(<HookComponent replyChannel={"test-reply"} />);
+	unmount();
+	expect(mockedIpc.on.mock.calls.length).toEqual(1);
+	expect(mockedIpc.on.mock.calls[0][0]).toEqual("test-reply");
+});
+
 test("Should unregister listener on unmount", () => {
 	const { unmount } = render(<HookComponent />);
 	unmount();
@@ -34,13 +49,23 @@ test("Should unregister listener on unmount", () => {
 });
 
 test("Should send event", () => {
-	const { unmount } = render(<HookComponent />);
+	const { unmount } = render(<HookComponent replyChannel={"reply"} />);
 	channel.sendEvent({ test: true });
 	unmount();
 
 	expect(mockedIpc.send.mock.calls.length).toEqual(1);
 	expect(mockedIpc.send.mock.calls[0][0]).toEqual("test");
 	expect(mockedIpc.send.mock.calls[0][1]).toEqual({ replyChannel: "reply", test: true });
+});
+
+test("Should send event with the generated replyChannelId", () => {
+	const { unmount } = render(<HookComponent />);
+	channel.sendEvent({ test: true });
+	unmount();
+
+	expect(mockedIpc.send.mock.calls.length).toEqual(1);
+	expect(mockedIpc.send.mock.calls[0][0]).toEqual("test");
+	expect(mockedIpc.send.mock.calls[0][1]).toEqual({ replyChannel: "test-123456", test: true });
 });
 
 test("Should call callback on response", () => {
@@ -51,11 +76,12 @@ test("Should call callback on response", () => {
 		callback = cb;
 		return undefined as any;
 	});
+
 	mockedIpc.send.mockImplementation(function (name, params) {
 		callback(undefined, params);
 	});
 
-	const { unmount } = render(<HookComponent />);
+	const { unmount } = render(<HookComponent replyChannel={"reply"} />);
 	channel.sendEvent({ test: true });
 	unmount();
 

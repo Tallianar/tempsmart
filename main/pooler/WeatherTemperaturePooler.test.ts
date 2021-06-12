@@ -4,6 +4,11 @@ import axios from "axios";
 
 jest.mock("axios");
 const mockAxios = axios as jest.Mocked<typeof axios>;
+let pooler: WeatherTemperaturePooler;
+
+beforeEach(() => {
+	pooler = new WeatherTemperaturePooler("key", "city");
+});
 
 afterEach(() => {
 	mockAxios.get.mockClear();
@@ -11,12 +16,42 @@ afterEach(() => {
 
 test("Should fetch temperature", async () => {
 	mockAxios.get.mockResolvedValue({ data: { name: "city", main: { temp: 100 } } });
-	const pooler = new WeatherTemperaturePooler();
 	const result = await pooler.requestTemperature();
 
 	expect(result).toEqual(100);
 	expect(mockAxios.get.mock.calls.length).toEqual(1);
 	expect(mockAxios.get.mock.calls[0][0]).toEqual(
-		"https://api.openweathermap.org/data/2.5/weather?q=Edinburgh&appid=2d567e25289ca017a464bcba6c011cf1&units=metric&lang=en"
+		"https://api.openweathermap.org/data/2.5/weather?q=city&appid=key&units=metric&lang=en"
 	);
+});
+
+test("Should set the correct parameters", async () => {
+	const pooler = new WeatherTemperaturePooler("key", "city");
+	expect(pooler.city).toEqual("city");
+	expect(pooler.appId).toEqual("key");
+});
+
+test("Should construct a valid url", async () => {
+	expect(pooler.getUrl()).toEqual(
+		"https://api.openweathermap.org/data/2.5/weather?q=city&appid=key&units=metric&lang=en"
+	);
+});
+
+test("Should throw error on empty key", async () => {
+	pooler.appId = "";
+	await expect(pooler.requestTemperature()).rejects.toThrowError("OWM AppID not set");
+});
+
+test("Should throw error on empty city", async () => {
+	pooler.city = "";
+	await expect(pooler.requestTemperature()).rejects.toThrowError("OWM City not set");
+});
+
+test("Should throw an error if temperature is not available", async () => {
+	mockAxios.get.mockRejectedValue({});
+
+	await expect(pooler.requestTemperature()).rejects.toThrowError(
+		"Could not fetch OpenWeatherMap Temperature"
+	);
+	expect(mockAxios.get.mock.calls.length).toEqual(1);
 });

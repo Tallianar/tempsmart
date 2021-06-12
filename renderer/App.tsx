@@ -4,7 +4,7 @@ import { useTemperature } from "./hooks/useTemperature";
 interface Props {}
 
 const App = ({}: Props) => {
-	const { weather, cpu } = useTemperature("app-temperature", 10000);
+	const { weather, cpu } = useTemperature( 10000);
 
 	return (
 		<div>

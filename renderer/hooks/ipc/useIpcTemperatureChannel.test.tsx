@@ -9,7 +9,7 @@ const mockedIpc = mocked(ipcRenderer);
 let channel: { sendEvent: () => void };
 
 function HookComponent() {
-	channel = useIpcTemperatureChannel("reply-channel", jest.fn());
+	channel = useIpcTemperatureChannel(jest.fn(), "reply-channel");
 	return null;
 }
 

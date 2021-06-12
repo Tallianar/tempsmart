@@ -4,9 +4,13 @@ interface IpcRendererTemperatureChannelResponse {
 	cpu: number;
 	weather: number;
 }
+
+/**
+ * A typed implementation of the useIpcChannel for the temperature channel
+ */
 export function useIpcTemperatureChannel(
-	replyChannel: string,
-	onEvent: (params: IpcRendererTemperatureChannelResponse) => void
+	onEvent: (params: IpcRendererTemperatureChannelResponse) => void,
+	replyChannel?: string
 ) {
-	return useIpcChannel("temperature", replyChannel, onEvent);
+	return useIpcChannel("temperature", onEvent, replyChannel);
 }

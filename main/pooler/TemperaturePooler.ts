@@ -3,7 +3,7 @@
  * Mainly to provide a common interface and caching ability
  */
 export abstract class TemperaturePooler {
-	private readonly cacheDuration: number;
+	protected readonly cacheDuration: number;
 	private cachedTime: number = 0;
 	private cachedValue: number | null = 0;
 

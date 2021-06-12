@@ -5,7 +5,7 @@ import React from "react";
 let callback: (params: any) => void;
 let mockSendEvent = jest.fn();
 jest.mock("./ipc/useIpcTemperatureChannel", () => ({
-	useIpcTemperatureChannel: (replyChannel: string, cb: any) => {
+	useIpcTemperatureChannel: (cb: any, replyChannel: string) => {
 		callback = cb;
 		return { sendEvent: mockSendEvent };
 	},
@@ -18,7 +18,7 @@ jest.mock("react", () => ({
 }));
 
 function HookComponent({ refresh }: { refresh?: number }) {
-	useTemperature("reply-channel", refresh);
+	useTemperature(refresh);
 	return null;
 }
 
