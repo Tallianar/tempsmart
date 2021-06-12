@@ -21,8 +21,10 @@
 		"package:dist": "electron-builder --dir",
 		"test": "jest --color"
 	},
+	"optionalDependencies": {
+		"osx-temperature-sensor": "^1.0.7"
+	},
 	"dependencies": {
-		"osx-temperature-sensor": "^1.0.7",
 		"systeminformation": "^5.7.6"
 	},
 	"devDependencies": {
