@@ -10,14 +10,16 @@ const App = ({}: Props) => {
 	useEffect(() => {
 		const timer = setInterval(() => {
 			ipcRenderer.send("temperature");
-		}, 1000);
+		}, 10000);
+
+		ipcRenderer.send("temperature");
 
 		const callback = (
 			event: IpcRendererEvent,
-			{ cpu, weather }: { cpu: number; weather: number }
+			params: { cpu: number; weather: number }
 		) => {
-			setCPU(cpu);
-			setWeather(weather);
+			setCPU(params.cpu);
+			setWeather(params.weather);
 		};
 
 		ipcRenderer.on("temperature", callback);
