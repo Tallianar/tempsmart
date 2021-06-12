@@ -1,12 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
-import si from "systeminformation";
 
 let mainWindow: Electron.BrowserWindow | null;
-
-si.cpuTemperature().then(r=>{
-	console.log(r)
-});
 
 function createWindow() {
 	mainWindow = new BrowserWindow({
