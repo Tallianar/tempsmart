@@ -23,6 +23,7 @@ export class WeatherTemperaturePooler extends TemperaturePooler {
 		};
 
 		const query = queryString.stringify(params);
+		console.log(new Date(), "fetch owm");
 		const { data } = await axios.get(`${baseUrl}?${query}`);
 		return data.main.temp;
 	}

@@ -1,13 +1,10 @@
+import { IpcMainTemperatureChannel } from "./IpcMainTemperatureChannel";
 import { ipcMain } from "electron";
-import { CPUTemperaturePooler } from "../pooler/CPUTemperaturePooler";
-import { WeatherTemperaturePooler } from "../pooler/WeatherTemperaturePooler";
 
-const cpuPooler = new CPUTemperaturePooler();
-const weatherPooler = new WeatherTemperaturePooler();
+const temperatureChannel = new IpcMainTemperatureChannel();
 
-ipcMain.on("temperature", async (event, params) => {
-	event.reply("temperature", {
-		cpu: await cpuPooler.requestTemperature(),
-		weather: await weatherPooler.requestTemperature(),
-	});
-});
+const channels = [temperatureChannel];
+
+for (const channel of channels) {
+	ipcMain.on(channel.getChannel(), channel.handleEvent.bind(channel));
+}
