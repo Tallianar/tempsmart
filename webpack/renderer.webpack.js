@@ -1,6 +1,5 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const {IgnorePlugin} = require("webpack");
 
 const rootPath = path.resolve(__dirname, "..");
 const rendererPath = path.resolve(rootPath, "renderer");
@@ -19,7 +18,7 @@ module.exports = {
 			{
 				test: /\.ts(x?)$/,
 				include: /renderer/,
-				use: [{loader: "ts-loader"}],
+				use: [{ loader: "ts-loader" }],
 			},
 			{
 				test: /\.s[ac]ss$/i,
@@ -39,7 +38,6 @@ module.exports = {
 		publicPath: "./",
 	},
 	plugins: [
-		new HtmlWebpackPlugin({template: path.resolve(rendererPath, "index.html")}),
-		new IgnorePlugin(/osx-temperature-sensor/)
+		new HtmlWebpackPlugin({ template: path.resolve(rendererPath, "index.html") })
 	],
 };
