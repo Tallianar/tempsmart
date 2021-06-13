@@ -8,8 +8,9 @@ registerIpcChannels();
 
 function createWindow() {
 	mainWindow = new BrowserWindow({
-		width: 500,
-		height: 300,
+		width: 900,
+		height: 400,
+		resizable: false,
 		backgroundColor: "#393a41",
 		webPreferences: {
 			nodeIntegration: true,

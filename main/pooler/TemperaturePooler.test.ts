@@ -3,16 +3,19 @@ import { TemperaturePooler } from "./TemperaturePooler";
 const fetchMock = jest.fn().mockImplementation(() => 100);
 
 class TestPooler extends TemperaturePooler {
-
 	protected async fetchTemperature(): Promise<number> {
-		return fetchMock();
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve(fetchMock());
+			});
+		});
 	}
 }
 
 let pooler: TestPooler;
 
 beforeEach(() => {
-	pooler = new TestPooler(10);
+	pooler = new TestPooler(50);
 });
 
 afterEach(() => {
@@ -31,8 +34,13 @@ test("Should return a cached value when requesting within cache time", async () 
 	expect(fetchMock).toBeCalledTimes(1);
 });
 
-test("Should fetch new data when requesting outside cache time", async () => {
+test("Should return fetch only once when two requests happen concurrently", async () => {
+	pooler.requestTemperature();
 	await pooler.requestTemperature();
+	expect(fetchMock).toBeCalledTimes(1);
+});
+
+test("Should fetch new data when requesting outside cache time", async () => {
 	await pooler.requestTemperature();
 
 	await new Promise((resolve) => {
@@ -40,6 +48,6 @@ test("Should fetch new data when requesting outside cache time", async () => {
 			await pooler.requestTemperature();
 			expect(fetchMock).toBeCalledTimes(2);
 			resolve(true);
-		}, 20);
+		}, 60);
 	});
 });

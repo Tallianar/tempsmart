@@ -13,7 +13,7 @@ export function useTemperature(refresh?: number, replyChannel?: string) {
 	const channel = useIpcTemperatureChannel((params) => {
 		setWeather(params.weather);
 		setCPU(params.cpu);
-	});
+	}, replyChannel);
 
 	useEffect(() => {
 		channel.sendEvent();

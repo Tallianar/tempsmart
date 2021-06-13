@@ -21,19 +21,20 @@ export class IpcMainTemperatureChannel {
 
 	async handleEvent(event: IpcMainEvent, params: { replyChannel: string }) {
 		// console.log(`[ipc][${this.getChannel()}] -> ${params.replyChannel}`);
+		const time = new Date().getTime();
 
 		let cpu;
 		try {
-			cpu = { value: await this.cpuPooler.requestTemperature() };
+			cpu = { time, value: await this.cpuPooler.requestTemperature() };
 		} catch (e) {
-			cpu = { value: null, error: e.message };
+			cpu = { time, value: null, error: e.message };
 		}
 
 		let weather;
 		try {
-			weather = { value: await this.weatherPooler.requestTemperature() };
+			weather = { time, value: await this.weatherPooler.requestTemperature() };
 		} catch (e) {
-			weather = { value: null, error: e.message };
+			weather = { time, value: null, error: e.message };
 		}
 
 		event.reply(params.replyChannel, { cpu, weather });

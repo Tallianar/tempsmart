@@ -9,9 +9,7 @@ const App: React.FC = () => {
 		setReady(true);
 	};
 
-	return (
-		<div className={"container"}>{ready ? <Dashboard /> : <Setup onReady={handleReady} />}</div>
-	);
+	return <div>{ready ? <Dashboard /> : <Setup onReady={handleReady} />}</div>;
 };
 
 export { App };

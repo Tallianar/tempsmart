@@ -7,6 +7,10 @@ interface IpcMainSetupChannelRequest {
 	appId: string;
 }
 
+/**
+ * Class to manage the setup ipc channel.
+ * Listen to the inputs from the setup page and pass them to the OWM pooler
+ */
 export class IpcMainSetupChannel {
 	private weatherPooler;
 	constructor(weatherPooler: WeatherTemperaturePooler) {

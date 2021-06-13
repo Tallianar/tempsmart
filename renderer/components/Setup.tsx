@@ -5,10 +5,14 @@ import { CitiesDatalist } from "./CitiesDatalist";
 export interface SetupProps {
 	onReady: () => void;
 }
-// "2d567e25289ca017a464bcba6c011cf1"
+
+/**
+ * Form to request the city and appid fro the OpenWeatherMap
+ * The details will be sent to the backend via ipc and on successful reply it will call the onReady callback
+ */
 const Setup: React.FC<SetupProps> = (props) => {
-	const [appId, setAppId] = useState<string | null>(null);
 	const [city, setCity] = useState<string | null>(null);
+	const [appId, setAppId] = useState<string | null>("2d567e25289ca017a464bcba6c011cf1");
 
 	const validClassAppId = appId === null || appId.length > 0 ? "is-valid" : "is-invalid";
 	const validClassCity = city === null || city.length > 0 ? "is-valid" : "is-invalid";
@@ -40,46 +44,56 @@ const Setup: React.FC<SetupProps> = (props) => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<div className={"vh-100 d-flex align-items-center justify-content-center"}>
 			<div>
-				<label className={"form-label"}>
-					OpenWeatherMap API Key
-					<div className={"input-group has-validation"}>
-						<input
-							className={"form-input " + validClassAppId}
-							aria-label={"OpenWeatherMap API Key"}
-							name={"appId"}
-							value={appId || ""}
-							onChange={handleKeyChange}
-						/>
-						<div className="invalid-feedback">Please specify an API Key.</div>
+				<h3 className={"text-center"}>TempSmart</h3>
+				<form className={"mt-4"} onSubmit={handleSubmit}>
+					<div>
+						<div className={"d-none"}>
+							<label className={"form-label"}>
+								OpenWeatherMap API Key
+								<div className={"input-group has-validation"}>
+									<input
+										className={"form-input " + validClassAppId}
+										aria-label={"OpenWeatherMap API Key"}
+										name={"appId"}
+										value={appId || ""}
+										onChange={handleKeyChange}
+									/>
+									<div className="invalid-feedback">
+										Please specify an API Key.
+									</div>
+								</div>
+							</label>
+						</div>
+						<div>
+							<div className={"input-group has-validation"}>
+								<input
+									className={"form-input " + validClassCity}
+									list={"cities"}
+									aria-label={"City"}
+									name={"city"}
+									value={city || ""}
+									placeholder={"City"}
+									onChange={handleCityChange}
+								/>
+								<div className="invalid-feedback">Please specify a city.</div>
+								<CitiesDatalist />
+							</div>
+						</div>
+						<div className={"mt-4 text-center"}>
+							<button
+								role={"submit"}
+								className={"btn btn-primary"}
+								aria-label={"Start"}
+							>
+								Start
+							</button>
+						</div>
 					</div>
-				</label>
+				</form>
 			</div>
-
-			<div>
-				<label>
-					City
-					<div className={"input-group has-validation"}>
-						<input
-							className={"form-input " + validClassCity}
-							list={"cities"}
-							aria-label={"City"}
-							name={"city"}
-							value={city || ""}
-							onChange={handleCityChange}
-						/>
-						<div className="invalid-feedback">Please specify a city.</div>
-						<CitiesDatalist />
-					</div>
-				</label>
-			</div>
-			<div className={"mt-4"}>
-				<button role={"submit"} className={"btn btn-primary"} aria-label={"Submit"}>
-					Submit
-				</button>
-			</div>
-		</form>
+		</div>
 	);
 };
 

@@ -1,9 +1,15 @@
+$body-bg: #393a41;
+$body-color: white;
+
+$theme-colors: (
+	"primary": #6fcbb2,
+	"danger": #ff4136,
+	"light": #aaaaaa44,
+);
+
 @import "~bootstrap";
 
 body {
-	background: #393a41;
-	color: white;
 	font-family: sans-serif;
-	padding: 1em;
 	font-size: 14px;
 }

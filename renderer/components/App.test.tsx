@@ -9,6 +9,9 @@ jest.mock("electron", () => ({ ipcRenderer: { on: jest.fn(), off: jest.fn(), sen
 // just to avoid loading the whole thing
 jest.mock("../data/cities.json", () => []);
 
+// disable apexcharts rendering
+jest.mock("react-apexcharts", () => () => null);
+
 const mockSendEvent = jest.fn();
 jest.mock("../hooks/ipc/useIpcSetupChannel", () => {
 	return {
@@ -25,12 +28,12 @@ jest.mock("../hooks/ipc/useIpcSetupChannel", () => {
 
 test("Should change to dashboard after ready", () => {
 	const el = render(<App />);
-	fireEvent.change(el.getByLabelText("OpenWeatherMap API Key"), {
-		target: { value: "aabb" },
-	});
+	// fireEvent.change(el.getByLabelText("OpenWeatherMap API Key"), {
+	// 	target: { value: "aabb" },
+	// });
 	fireEvent.change(el.getByLabelText("City"), { target: { value: "bbaa" } });
-	fireEvent.click(el.getByText("Submit"));
+	fireEvent.click(el.getByText("Start"));
 
-	expect(el.getByTitle("Dashboard")).toBeInTheDocument();
+	expect(el.getByTestId("dashboard")).toBeInTheDocument();
 	el.unmount();
 });

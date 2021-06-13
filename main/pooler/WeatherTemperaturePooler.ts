@@ -42,6 +42,7 @@ export class WeatherTemperaturePooler extends TemperaturePooler {
 	}
 
 	protected async fetchTemperature() {
+		// console.log("Fetch OWM")
 		const url = this.getUrl();
 		try {
 			const { data } = await axios.get(url);

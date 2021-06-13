@@ -2,6 +2,7 @@ import { useIpcChannel } from "./useIpcChannel";
 
 export interface TemperatureResponse {
 	value: number | null;
+	time?: number;
 	error?: string;
 }
 
