@@ -1,5 +1,7 @@
 # TempSmart
 
+![TempSmart screenshot](./screenshot.png)
+
 ## Installing
 
 Install dependencies:
@@ -25,7 +27,7 @@ yarn package
 Search for a city when prompted and select it from the suggestions.
 All the 20000 cities supported by OpenWeatherMap are available.
 
-TempSmart has been tested on Windows and MacOS. 
+TempSmart has been tested on Windows and MacOS.
 
 Some Windows machines restrict the access to the CPU temperature and might not return a valid value.
 
