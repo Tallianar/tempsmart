@@ -42,7 +42,7 @@ const SparkChart: React.FC<SparkChartProps> = (props) => {
 		tooltip: { enabled: false },
 	};
 
-	return <ReactApexChart options={options} series={series} height={300} />;
+	return <ReactApexChart options={options} series={series} height={320} />;
 };
 
 export { SparkChart };

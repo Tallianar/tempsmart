@@ -34,6 +34,7 @@ export class WeatherTemperaturePooler extends TemperaturePooler {
 			appid: this.appId,
 			units: "metric",
 			lang: "en",
+			t: new Date().getTime(),
 		};
 
 		const query = queryString.stringify(params);
@@ -42,12 +43,13 @@ export class WeatherTemperaturePooler extends TemperaturePooler {
 	}
 
 	protected async fetchTemperature() {
-		// console.log("Fetch OWM")
 		const url = this.getUrl();
+		// console.log("Fetch OWM", url);
 		try {
 			const { data } = await axios.get(url);
 			return data.main.temp;
 		} catch (e) {
+			// console.error(e);
 			throw new Error("Could not fetch OpenWeatherMap Temperature");
 		}
 	}

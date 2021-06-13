@@ -6,7 +6,7 @@ import "@testing-library/jest-dom/extend-expect";
 
 jest.mock("electron", () => ({ ipcRenderer: { on: jest.fn(), off: jest.fn(), send: jest.fn() } }));
 
-jest.mock("../data/cities.json", () => []);
+jest.mock("../data/cities.json", () => ["bbaa"]);
 
 const mockSendEvent = jest.fn();
 jest.mock("../hooks/ipc/useIpcSetupChannel", () => {
@@ -50,6 +50,13 @@ test("Should show an error city has not been entered ", () => {
 	});
 	fireEvent.click(element.getByText("Start"));
 	expect(element.getByLabelText("City")).toHaveClass("is-invalid");
+});
+
+test("Should show an error when a city is not recognized ", () => {
+	fireEvent.change(element.getByLabelText("City"), { target: { value: "x" } });
+	fireEvent.click(element.getByText("Start"));
+	expect(element.getByLabelText("City")).toHaveClass("is-invalid");
+	expect(element.getByText("City not recognized.")).toBeInTheDocument();
 });
 
 // test("Should show an error appId has not been entered ", () => {

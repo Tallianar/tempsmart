@@ -5,6 +5,7 @@ import axios from "axios";
 jest.mock("axios");
 const mockAxios = axios as jest.Mocked<typeof axios>;
 let pooler: WeatherTemperaturePooler;
+jest.spyOn(Date.prototype,"getTime").mockImplementation(()=>111)
 
 beforeEach(() => {
 	pooler = new WeatherTemperaturePooler("key", "city");
@@ -21,7 +22,7 @@ test("Should fetch temperature", async () => {
 	expect(result).toEqual(100);
 	expect(mockAxios.get.mock.calls.length).toEqual(1);
 	expect(mockAxios.get.mock.calls[0][0]).toEqual(
-		"https://api.openweathermap.org/data/2.5/weather?q=city&appid=key&units=metric&lang=en"
+		"https://api.openweathermap.org/data/2.5/weather?q=city&appid=key&units=metric&lang=en&t=111"
 	);
 });
 
@@ -33,7 +34,7 @@ test("Should set the correct parameters", async () => {
 
 test("Should construct a valid url", async () => {
 	expect(pooler.getUrl()).toEqual(
-		"https://api.openweathermap.org/data/2.5/weather?q=city&appid=key&units=metric&lang=en"
+		"https://api.openweathermap.org/data/2.5/weather?q=city&appid=key&units=metric&lang=en&t=111"
 	);
 });
 

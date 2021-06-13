@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useIpcSetupChannel } from "../hooks/ipc/useIpcSetupChannel";
 import { CitiesDatalist } from "./CitiesDatalist";
+import cities from "../data/cities.json";
 
 export interface SetupProps {
 	onReady: () => void;
@@ -13,9 +14,11 @@ export interface SetupProps {
 const Setup: React.FC<SetupProps> = (props) => {
 	const [city, setCity] = useState<string | null>(null);
 	const [appId, setAppId] = useState<string | null>("2d567e25289ca017a464bcba6c011cf1");
+	const [isRecognizedCity, setIsRecognizedCity] = useState(true);
 
 	const validClassAppId = appId === null || appId.length > 0 ? "is-valid" : "is-invalid";
-	const validClassCity = city === null || city.length > 0 ? "is-valid" : "is-invalid";
+	const validClassCity =
+		isRecognizedCity && (city === null || city.length > 0) ? "is-valid" : "is-invalid";
 
 	const { sendEvent } = useIpcSetupChannel(() => {
 		props.onReady();
@@ -26,6 +29,7 @@ const Setup: React.FC<SetupProps> = (props) => {
 	};
 
 	const handleCityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setIsRecognizedCity(true);
 		setCity(e.target.value);
 	};
 
@@ -37,6 +41,12 @@ const Setup: React.FC<SetupProps> = (props) => {
 		}
 		if (!city) {
 			setCity("");
+			return;
+		}
+
+		const foundCity = cities.find((c) => city === c);
+		if (!foundCity) {
+			setIsRecognizedCity(false);
 			return;
 		}
 
@@ -67,7 +77,7 @@ const Setup: React.FC<SetupProps> = (props) => {
 							</label>
 						</div>
 						<div>
-							<div className={"input-group has-validation"}>
+							<div className={"flex-column input-group has-validation"}>
 								<input
 									className={"form-input " + validClassCity}
 									list={"cities"}
@@ -77,7 +87,11 @@ const Setup: React.FC<SetupProps> = (props) => {
 									placeholder={"City"}
 									onChange={handleCityChange}
 								/>
-								<div className="invalid-feedback">Please specify a city.</div>
+								<div className={"invalid-feedback"}>
+									{isRecognizedCity
+										? "Please specify a city."
+										: "City not recognized."}
+								</div>
 								<CitiesDatalist />
 							</div>
 						</div>

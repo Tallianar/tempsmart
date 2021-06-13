@@ -20,6 +20,15 @@ Create a production build:
 yarn package
 ```
 
+## Usage
+
+Search for a city when prompted and select it from the suggestions.
+All the 20000 cities supported by OpenWeatherMap are available.
+
+TempSmart has been tested on Windows and MacOS. 
+
+Some Windows machines restrict the access to the CPU temperature and might not return a valid value.
+
 ## Tests
 
 You can run the tests with `jest` via the following command
