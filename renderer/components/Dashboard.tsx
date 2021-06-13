@@ -9,7 +9,7 @@ export interface DashboardProps {}
  * Display the current temperatures and a chart with the historic values
  */
 const Dashboard: React.FC<DashboardProps> = (props) => {
-	const { weather, cpu } = useTemperature(60000, "dashboard-temp");
+	const { weather, cpu } = useTemperature(5000, "dashboard-temp");
 
 	return (
 		<main data-testid={"dashboard"} className={"row m-2"}>
