@@ -36,9 +36,26 @@ const SparkChart: React.FC<SparkChartProps> = (props) => {
 			toolbar: { show: false },
 			background: "#00000000",
 		},
+		markers: {
+			radius: 0,
+			size: 0,
+		},
 		dataLabels: { enabled: false },
 		stroke: { width: 3 },
 		xaxis: { type: "datetime" },
+		yaxis: [
+			{
+				title: {
+					text: "Weather Temp",
+				},
+			},
+			{
+				opposite: true,
+				title: {
+					text: "CPU Temp",
+				},
+			},
+		],
 		tooltip: { enabled: false },
 	};
 
