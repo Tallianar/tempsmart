@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { useIpcSetupChannel } from "../hooks/ipc/useIpcSetupChannel";
-import cities from "../data/cities.json";
+import { CitiesDatalist } from "./CitiesDatalist";
 
 export interface SetupProps {
 	onReady: () => void;
 }
-
+// "2d567e25289ca017a464bcba6c011cf1"
 const Setup: React.FC<SetupProps> = (props) => {
-	const [appId, setAppId] = useState("2d567e25289ca017a464bcba6c011cf1");
-	const [city, setCity] = useState("Edinburgh");
+	const [appId, setAppId] = useState<string | null>(null);
+	const [city, setCity] = useState<string | null>(null);
+
+	const validClassAppId = appId === null || appId.length > 0 ? "is-valid" : "is-invalid";
+	const validClassCity = city === null || city.length > 0 ? "is-valid" : "is-invalid";
 
 	const { sendEvent } = useIpcSetupChannel(() => {
 		props.onReady();
@@ -24,6 +27,15 @@ const Setup: React.FC<SetupProps> = (props) => {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+		if (!appId) {
+			setAppId("");
+			return;
+		}
+		if (!city) {
+			setCity("");
+			return;
+		}
+
 		sendEvent({ appId, city });
 	};
 
@@ -32,14 +44,15 @@ const Setup: React.FC<SetupProps> = (props) => {
 			<div>
 				<label className={"form-label"}>
 					OpenWeatherMap API Key
-					<div>
+					<div className={"input-group has-validation"}>
 						<input
-							className={"form-input"}
+							className={"form-input " + validClassAppId}
 							aria-label={"OpenWeatherMap API Key"}
 							name={"appId"}
-							value={appId}
+							value={appId || ""}
 							onChange={handleKeyChange}
 						/>
+						<div className="invalid-feedback">Please specify an API Key.</div>
 					</div>
 				</label>
 			</div>
@@ -47,21 +60,17 @@ const Setup: React.FC<SetupProps> = (props) => {
 			<div>
 				<label>
 					City
-					<div>
+					<div className={"input-group has-validation"}>
 						<input
+							className={"form-input " + validClassCity}
 							list={"cities"}
 							aria-label={"City"}
 							name={"city"}
-							value={city}
+							value={city || ""}
 							onChange={handleCityChange}
 						/>
-						<datalist id={"cities"}>
-							{cities.map((city) => (
-								<option data-testid={city} key={city} value={city}>
-									{city}
-								</option>
-							))}
-						</datalist>
+						<div className="invalid-feedback">Please specify a city.</div>
+						<CitiesDatalist />
 					</div>
 				</label>
 			</div>

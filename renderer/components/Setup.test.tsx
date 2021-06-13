@@ -1,13 +1,12 @@
 import React from "react";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, RenderResult } from "@testing-library/react";
 import { Setup } from "./Setup";
 import { IpcSetupChannelRequest } from "../hooks/ipc/useIpcSetupChannel";
 import "@testing-library/jest-dom/extend-expect";
-import { App } from "./App";
 
 jest.mock("electron", () => ({ ipcRenderer: { on: jest.fn(), off: jest.fn(), send: jest.fn() } }));
 
-jest.mock("../data/cities.json", () => ["London, GB", "New York, US"]);
+jest.mock("../data/cities.json", () => []);
 
 const mockSendEvent = jest.fn();
 jest.mock("../hooks/ipc/useIpcSetupChannel", () => {
@@ -23,27 +22,50 @@ jest.mock("../hooks/ipc/useIpcSetupChannel", () => {
 	};
 });
 
+let element: RenderResult;
+const callback = jest.fn();
+beforeEach(() => {
+	element = render(<Setup onReady={callback} />);
+});
+afterEach(() => {
+	element.unmount();
+	callback.mockClear();
+});
+
 test("Should call onReady with the values entered", () => {
-	const cb = jest.fn();
-	const el = render(<Setup onReady={cb} />);
-	fireEvent.change(el.getByLabelText("OpenWeatherMap API Key"), {
+	fireEvent.change(element.getByLabelText("OpenWeatherMap API Key"), {
 		target: { value: "aabb" },
 	});
-	fireEvent.change(el.getByLabelText("City"), { target: { value: "bbaa" } });
-	fireEvent.click(el.getByText("Submit"));
+	fireEvent.change(element.getByLabelText("City"), { target: { value: "bbaa" } });
+	fireEvent.click(element.getByText("Submit"));
 
-	expect(cb.mock.calls.length).toEqual(1);
+	expect(callback.mock.calls.length).toEqual(1);
 	expect(mockSendEvent.mock.calls.length).toEqual(1);
 	expect(mockSendEvent.mock.calls[0][0]).toEqual({ city: "bbaa", appId: "aabb" });
 });
 
-test("Should render a list of cities", () => {
-	const el = render(<App />);
-	expect(el.getByTestId("London, GB")).toBeInTheDocument();
-	expect(el.getByTestId("New York, US")).toBeInTheDocument();
-	el.unmount();
+
+test("Should show an error city has not been entered ", () => {
+	fireEvent.change(element.getByLabelText("OpenWeatherMap API Key"), {
+		target: { value: "aabb" },
+	});
+	fireEvent.click(element.getByText("Submit"));
+	expect(element.getByLabelText("City")).toHaveClass("is-invalid");
 });
 
-test("Should show an error city has not been entered ", () => {});
+test("Should show an error appId has not been entered ", () => {
+	fireEvent.change(element.getByLabelText("City"), { target: { value: "bbaa" } });
+	fireEvent.click(element.getByText("Submit"));
+	expect(element.getByLabelText("OpenWeatherMap API Key")).toHaveClass("is-invalid");
+	expect(callback.mock.calls.length).toEqual(0);
+});
 
-test("Should show an error appId has not been entered ", () => {});
+test("Should show an error appId was deleted", () => {
+	fireEvent.change(element.getByLabelText("OpenWeatherMap API Key"), {
+		target: { value: "bbaa" },
+	});
+	expect(element.getByLabelText("OpenWeatherMap API Key")).toHaveClass("is-valid");
+	fireEvent.change(element.getByLabelText("OpenWeatherMap API Key"), { target: { value: "" } });
+	expect(element.getByLabelText("OpenWeatherMap API Key")).toHaveClass("is-invalid");
+	expect(callback.mock.calls.length).toEqual(0);
+});
