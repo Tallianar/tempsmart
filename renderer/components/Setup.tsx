@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useIpcSetupChannel } from "../hooks/ipc/useIpcSetupChannel";
+import cities from "../data/cities.json";
 
 export interface SetupProps {
 	onReady: () => void;
@@ -21,41 +22,55 @@ const Setup: React.FC<SetupProps> = (props) => {
 		setCity(e.target.value);
 	};
 
-	const handleSubmit = () => {
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
 		sendEvent({ appId, city });
 	};
 
 	return (
-		<div>
+		<form onSubmit={handleSubmit}>
 			<div>
-				<label>
+				<label className={"form-label"}>
 					OpenWeatherMap API Key
-					<input
-						aria-label={"OpenWeatherMap API Key"}
-						name={"appId"}
-						value={appId}
-						onChange={handleKeyChange}
-					/>
+					<div>
+						<input
+							className={"form-input"}
+							aria-label={"OpenWeatherMap API Key"}
+							name={"appId"}
+							value={appId}
+							onChange={handleKeyChange}
+						/>
+					</div>
 				</label>
 			</div>
 
 			<div>
 				<label>
 					City
-					<input
-						aria-label={"City"}
-						name={"city"}
-						value={city}
-						onChange={handleCityChange}
-					/>
+					<div>
+						<input
+							list={"cities"}
+							aria-label={"City"}
+							name={"city"}
+							value={city}
+							onChange={handleCityChange}
+						/>
+						<datalist id={"cities"}>
+							{cities.map((city) => (
+								<option data-testid={city} key={city} value={city}>
+									{city}
+								</option>
+							))}
+						</datalist>
+					</div>
 				</label>
 			</div>
-			<div>
-				<button aria-label={"Submit"} onClick={handleSubmit}>
+			<div className={"mt-4"}>
+				<button role={"submit"} className={"btn btn-primary"} aria-label={"Submit"}>
 					Submit
 				</button>
 			</div>
-		</div>
+		</form>
 	);
 };
 

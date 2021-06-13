@@ -6,6 +6,9 @@ import "@testing-library/jest-dom/extend-expect";
 
 jest.mock("electron", () => ({ ipcRenderer: { on: jest.fn(), off: jest.fn(), send: jest.fn() } }));
 
+// just to avoid loading the whole thing
+jest.mock("../data/cities.json", () => []);
+
 const mockSendEvent = jest.fn();
 jest.mock("../hooks/ipc/useIpcSetupChannel", () => {
 	return {
